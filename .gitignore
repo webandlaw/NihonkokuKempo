@@ -1,0 +1,12 @@
+.htpasswd
+.htaccess
+license.txt
+/node_modules/*
+.sass-cache
+.sass-cache/*
+*.sublime-project
+*.sublime-workspace
+compass_app_log.txt
+sftp-config.json
+.DS_Store
+*.DS_Store
