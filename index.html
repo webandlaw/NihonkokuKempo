@@ -11,8 +11,9 @@
             user = 'webandlaw',
             repo = 'NihonkokuKempo';
         if(document.location.search.length > 3){
-          var mdName = document.location.search.replace("?md=", '');
-          $.get("constitution/" +mdName + ".md", function(data){
+          var mdName = document.location.search.replace("?md=", ''),
+              mdPath = (mdName === 'README')? mdName : 'constitution/' + mdName;
+          $.get(mdPath + ".md", function(data){
             var c = new Showdown.converter;
             $container.empty().append('<a href="?"">もどる</a>');
             $container.append(c.makeHtml(data));
@@ -21,7 +22,7 @@
               var text = $(this).text();
               $(this).text(text.replace(/\(.*\)/, ''));
             });
-            $container.append('<a id="commit-history" href="https://github.com/'+user+'/'+repo+'/commits/master/constitution/'+mdName+'.md" target="_blank">変更履歴</a>')
+            $container.append('<div id="commit-history"><hr><a href="https://github.com/'+user+'/'+repo+'/commits/master/'+mdPath+'.md" target="_blank">変更履歴</a></div>')
           });
         }else{
           $.getJSON(['https://api.github.com/repos/',user,'/',repo,'/git/trees/master?recursive=1'].join(''),function(json){
@@ -60,6 +61,7 @@
       <ul id="nav"></ul>
     </div>
     <div id="footer">
+      <a href="?md=README">使い方</a>
       <a href="https://github.com/webandlaw/NihonkokuKempo" target="_blank">github</a>
       <small>web and law</small>
     </div>
