@@ -22,7 +22,11 @@
               var text = $(this).text();
               $(this).text(text.replace(/\(.*\)/, ''));
             });
+<<<<<<< HEAD
             $container.append('<div id="commit-history"><hr><a href="https://github.com/'+user+'/'+repo+'/blame/master/'+mdPath+'.md" target="_blank">変更履歴</a></div>')
+=======
+            $container.append('<div id="commit-history"><hr><a href="https://github.com/'+user+'/'+repo+'/commits/master/'+mdPath+'.md" target="_blank">変更履歴</a></div>')
+>>>>>>> master
           });
         }else{
           $.getJSON(['https://api.github.com/repos/',user,'/',repo,'/git/trees/master?recursive=1'].join(''),function(json){
