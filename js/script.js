@@ -72,7 +72,7 @@ var pageScript = (function(){
 
     initialize: function(){
       $('#top').remove();
-      this.renderBranchMd('gh-pages',this.mdPath);
+      this.renderBranchMd('自民党草案',this.mdPath);
       this.setBranchesList();
     },
 
