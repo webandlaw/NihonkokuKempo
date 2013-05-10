@@ -84,11 +84,13 @@ var pageScript = (function(){
       }).then(function(json){
         var data = json.data;
         for (var i = 0 ,l = data.length; i < l; i++) {
-          _this.$branches.prepend([
-            '<li>',
-              '<a href="#',data[i].name,'">',data[i].name,'</a>',
-            '</li>'
-          ].join(''));
+          if(data[i].name !== 'gh-pages'){
+            _this.$branches.prepend([
+              '<li>',
+                '<a href="#',data[i].name,'">',data[i].name,'</a>',
+              '</li>'
+            ].join(''));
+          }
         }
         _this.setBranchClickEvent();
       })
@@ -109,12 +111,11 @@ var pageScript = (function(){
         url : [github.api+'/repos/',github.user,'/',github.repo,'/git/trees/',branch,'?recursive=1'].join(''),
         dataType: 'jsonp'
       }).then(function(json){
-        console.log(json);
         var data = json.data.tree;
         for (var i = 0 ,l = data.length; i < l; i++) {
           if(data[i].path == _this.mdPath){
             _this.setCompare(data[i].url, baseUrl).then(function(data1, data2){
-              _this.$target.prepend(_this.c.makeHtml(data1));
+              _this.$target.empty().prepend(_this.c.makeHtml(data1));
               if(data2){
                 _this.$master.prepend(_this.c.makeHtml(data2));
                 document.title = _this.$master.find("h1").text();
@@ -145,7 +146,7 @@ var pageScript = (function(){
       }else{
         ajaxDfd(blobUrl).then(function(json){
           targetText = $.base64.decode(json.content ,true);
-          this.$compare.mergely('rhs', targetText);
+          _this.$compare.mergely('rhs', targetText);
           dfd.resolve(targetText);
         });
       }
