@@ -2,68 +2,40 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="css/style.css" />
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script type="text/javascript" src="js/showdown.js"></script>
-    <script type="text/javascript">
-      $(function(){
-        var $container = $("#container"),
-            user = 'webandlaw',
-            repo = 'NihonkokuKempo';
-        if(document.location.search.length > 3){
-          var mdName = document.location.search.replace("?md=", ''),
-              mdPath = (mdName === 'README')? mdName : 'constitution/' + mdName;
-          $.get(mdPath + ".md", function(data){
-            var c = new Showdown.converter;
-            $container.empty().append('<a href="?"">もどる</a>');
-            $container.append(c.makeHtml(data));
-            document.title = $container.find("h1").text();
-            $container.find(":header").each(function(){
-              var text = $(this).text();
-              $(this).text(text.replace(/\(.*\)/, ''));
-            });
-            $container.append('<div id="commit-history"><hr><a href="https://github.com/'+user+'/'+repo+'/blame/master/'+mdPath+'.md" target="_blank">変更履歴</a></div>')
-          });
-        }else{
-          $.getJSON(['https://api.github.com/repos/',user,'/',repo,'/git/trees/master?recursive=1'].join(''),function(json){
-            var data = json.tree,
-                $nav = $('#nav'),
-                c = new Showdown.converter;
-            for (var i = 0 ,l = data.length; i < l; i++) {
-              var path = data[i].path.split('/'),
-                  filename = path.pop(),
-                  dir = path[0];
-              if (dir == 'constitution' && filename.split('.').pop() == 'md'){
-                $.when(filename, getMd('constitution/'+filename)).then(function(filename, d){
-                  $nav.prepend([
-                    '<li>',
-                      '<a href="?md=',filename.split('.')[0],'">',$(c.makeHtml(d)).filter("h1").text(),'</a>',
-                    '</li>'
-                  ].join(''));
-                });
-              }
-            }
-          });
-        }
-      });
-      var getMd = function(url){
-        var dfd = $.Deferred();
-        $.get(url, function(data){
-          dfd.resolve(data);
-        });
-        return dfd.promise();
-      }
-    </script>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link rel="stylesheet" href="js/libs/codemirror.css" />
+    <link rel="stylesheet" href="js/libs/mergely.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/libs/showdown.js"></script>
+    <script type="text/javascript" src="js/libs/mergely.min.js"></script>
+    <script type="text/javascript" src="js/libs/codemirror.js"></script>
+    <script type="text/javascript" src="js/libs/base64.js"></script>
+    <script type="text/javascript" src="js/libs/jquery.base64.js"></script>
+    <script type="text/javascript" src="js/script.js" charset="utf-8"></script>
   </head>
   <body>
-    <div id="container" class="markdown-body">
-      <h1>日本国憲法</h1>
-      <ul id="nav"></ul>
-    </div>
-    <div id="footer">
-      <a href="?md=README">About</a>
-      <a href="https://github.com/webandlaw/NihonkokuKempo" target="_blank">github</a>
-      <small>web and law</small>
+    <div id="container">
+      <div id="main" class="markdown-body">
+          <div id="top">
+            <h1>日本国憲法</h1>
+            <ul id="nav"></ul>
+          </div>
+          <div id="page">
+            <a href="?">戻る</a>
+            <ul id="branches"></ul>
+            <div id="article">
+              <div id="master"></div>
+              <div id="target"></div>
+            </div>
+            <div id="compare"></div>
+          </div>
+        </div>
+      </div>
+      <div id="footer">
+        <a href="?md=README">About</a>
+        <a href="https://github.com/webandlaw/NihonkokuKempo" target="_blank">github</a>
+        <small>web and law</small>
+      </div>
     </div>
   </body>
 </html>
