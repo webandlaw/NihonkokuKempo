@@ -72,6 +72,24 @@ var pageScript = (function(){
 
     initialize: function(){
       $('#top').remove();
+      var _this = this;
+
+      // _this.$compare.mergely({
+      //     cmsettings: { readOnly: false, lineWrapping: true },
+      //     fgcolor: {a:'#000',c:'#969696',d:'#666'},
+      //     _bgcolor: '#333',
+      //     height: function(h){
+      //       return 400;
+      //     }
+      // });
+      // $.when(
+      //   ajaxDfd(this.mdPath),
+      //   ajaxDfd('constitution/test.md')
+      // ).then(function(mdText, json){
+      //   _this.$compare.mergely('lhs', mdText);
+      //   _this.$compare.mergely('rhs', json);
+      // });
+
       this.renderBranchMd('自民党草案',this.mdPath);
       this.setBranchesList();
     },
@@ -114,11 +132,15 @@ var pageScript = (function(){
         var data = json.data.tree;
         for (var i = 0 ,l = data.length; i < l; i++) {
           if(data[i].path == _this.mdPath){
-            _this.setCompare(data[i].url, baseUrl).then(function(data1, data2){
-              _this.$target.empty().prepend(_this.c.makeHtml(data1));
-              if(data2){
-                _this.$master.prepend(_this.c.makeHtml(data2));
-                document.title = _this.$master.find("h1").text();
+            _this.setCompare(data[i].url, baseUrl).then(function(data1, url){
+              if(url){
+                _this.$master.prepend(_this.c.makeHtml(data1));
+                _this.setCompare(url).then(function(data2){
+                  _this.$target.empty().prepend(_this.c.makeHtml(data2));
+                  document.title = _this.$master.find("h1").text();
+                });
+              }else{
+                _this.$target.empty().prepend(_this.c.makeHtml(data1));
               }
             });
             return false;
@@ -127,24 +149,31 @@ var pageScript = (function(){
       });
     },
 
-    setCompare: function(blobUrl, masteUrl){
+    setCompare: function(url, masteUrl){
       var dfd = $.Deferred(), targetText, _this = this;
       if(masteUrl){
         _this.$compare.mergely({
-            cmsettings: { readOnly: false, lineWrapping: true }
+            cmsettings: { readOnly: false, lineWrapping: true },
+            fgcolor: {a:'#4ba3fa',c:'#a3a3a3',d:'#666'},
+            _bgcolor: '#333',
+            height: function(h){
+              return 400;
+            }
         });
-        $.when(
-          ajaxDfd(masteUrl),
-          ajaxDfd(blobUrl)
-        ).then(function(mdText, json){
-          targetText = $.base64.decode(json.content ,true);
-          _this.$compare.mergely('lhs', mdText);
-          _this.$compare.mergely('rhs', targetText);
-          dfd.resolve(targetText,mdText);
+
+
+        // ajaxDfd(url).then(function(json){
+        //   targetText = $.base64.decode(json.content ,true);
+        //   _this.$compare.mergely('rhs', targetText);
+        // });
+
+        ajaxDfd(masteUrl).then(function(data){
+          _this.$compare.mergely('lhs', data);
+          dfd.resolve(data,url);
         });
 
       }else{
-        ajaxDfd(blobUrl).then(function(json){
+        ajaxDfd(url).then(function(json){
           targetText = $.base64.decode(json.content ,true);
           _this.$compare.mergely('rhs', targetText);
           dfd.resolve(targetText);
