@@ -28,11 +28,24 @@
 .mergely.d.lhs.start { border-top: 1px solid #ff7f7f; }
 
 .mergely.c.lhs,
-.mergely.c.rhs { background-color: #fafafa; }
+.mergely.c.rhs { background-color: #222; }
 .mergely.c.lhs.start,
 .mergely.c.rhs.start { border-top: 1px solid #a3a3a3; }
 .mergely.c.lhs.end,
 .mergely.c.rhs.end { border-bottom: 1px solid #a3a3a3; }
 
-.mergely.ch.a.rhs { background-color: #ddeeff; }
-.mergely.ch.d.lhs { background-color: #edc0c0; text-decoration: line-through; color: #888; }
+.mergely.ch.a.rhs { background-color: #ddeeff; color: #333;}
+.mergely.ch.d.lhs { background-color: lighten(#edc0c0,20%); text-decoration: line-through; color: #333; }
+
+.CodeMirror-sizer{
+  color: #ddd;
+  background-color: #222;
+}
+.CodeMirror-scroll{
+  background-color: #222;
+}
+
+.CodeMirror-gutter{
+  background-color: #222;
+}
+
